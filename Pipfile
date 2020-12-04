@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "==1.1.2"
+flask-sqlalchemy = "==2.4.4"
+click = "==7.1.2"
+sqlalchemy-serializer = "==1.3.4.4"
+ijson = "==3.1.3"
+flask-swagger-ui = "==3.36.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
+
+[scripts]
+initdb = "flask initdb"
+import-json = "flask import-json"
+devserver = "flask run"

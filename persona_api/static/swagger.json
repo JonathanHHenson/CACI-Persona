@@ -1,0 +1,307 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Persona demo api",
+    "version": "1.0.0",
+    "title": "CACI Persona API"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/search/{username}": {
+      "summary": "Searches for the specific username",
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "description": "Specific username to search for"
+        }
+      ],
+      "get": {
+        "operationId": "getPerson",
+        "responses": {
+          "200": {
+            "description": "Found Person",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/person"
+                },
+                "example": {
+                  "address": "Flat 14j\nChristine ford\nLake Kayleighbury\nME76 4XA",
+                  "birthdate": "2014-11-09",
+                  "blood_group": "0-",
+                  "company": "Mitchell, Wood and Watson",
+                  "current_location": [
+                    -14.7163535,
+                    67.644975
+                  ],
+                  "mail": "ythompson@hotmail.com",
+                  "name": "Kevin Jones-Chapman",
+                  "residence": "Flat 0\nLeigh key\nEast Angela\nL5U 3UA",
+                  "sex": "M",
+                  "ssn": "ZZ 16 91 15 T",
+                  "username": "yrobinson",
+                  "website": [
+                    "http://griffiths-turner.net/",
+                    "https://begum-summers.biz/",
+                    "https://dunn-martin.com/",
+                    "https://www.oliver.biz/"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/message"
+                },
+                "example": {
+                  "message": "Person with username='bibbity' could not be found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people": {
+      "summary": "Returns all people with pagination",
+      "parameters": [
+        {
+          "name": "top",
+          "in": "query",
+          "required": false,
+          "description": "The number of results to return. (default: 50, min: 0, max: 1000)"
+        },
+        {
+          "name": "skip",
+          "in": "query",
+          "required": false,
+          "description": "The number of results to skip. (default: 0, min: 0)"
+        }
+      ],
+      "get": {
+        "operationId": "getPeople",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/message"
+                  }
+                },
+                "example": [
+                  {
+                    "address": "09 Charlie motorway\nNorth Paigeville\nM1T 0PD",
+                    "birthdate": "1988-02-13",
+                    "blood_group": "A+",
+                    "company": "Berry, Grant and Anderson",
+                    "current_location": [
+                      -88.463234,
+                      -74.274428
+                    ],
+                    "mail": "marc07@gmail.com",
+                    "name": "Harriet Armstrong",
+                    "residence": "Flat 59\nBarlow harbors\nWilliamsside\nM1 3YU",
+                    "sex": "F",
+                    "ssn": "ZZ489841T",
+                    "username": "mauriceharris",
+                    "website": [
+                      "http://www.cunningham.net/",
+                      "https://griffiths.com/"
+                    ]
+                  },
+                  {
+                    "address": "Flat 59i\nWood orchard\nNew Rachelville\nB7 9YZ",
+                    "birthdate": "1973-01-02",
+                    "blood_group": "B-",
+                    "company": "Jenkins LLC",
+                    "current_location": [
+                      -74.8506105,
+                      157.862558
+                    ],
+                    "mail": "cameron61@gmail.com",
+                    "name": "Roger Allen-Benson",
+                    "residence": "89 Angela street\nNew Marieview\nOX72 6TF",
+                    "sex": "F",
+                    "ssn": "ZZ 605364 T",
+                    "username": "twong",
+                    "website": [
+                      "http://www.forster.info/"
+                    ]
+                  },
+                  {
+                    "address": "6 Beverley street\nSouth Annette\nG7 0TB",
+                    "birthdate": "1989-01-08",
+                    "blood_group": "0+",
+                    "company": "Miller, Robinson and Day",
+                    "current_location": [
+                      23.776493,
+                      -28.483626
+                    ],
+                    "mail": "elliott88@gmail.com",
+                    "name": "Miss Kate Simmons",
+                    "residence": "31 Lynn hill\nSouth Anthony\nNR9 6PA",
+                    "sex": "F",
+                    "ssn": "ZZ 494732 T",
+                    "username": "ocole",
+                    "website": [
+                      "https://www.martin.com/",
+                      "https://www.nelson.com/"
+                    ]
+                  },
+                  {
+                    "address": "628 Haynes divide\nPort Kathryn\nNR81 0SH",
+                    "birthdate": "1988-08-18",
+                    "blood_group": "A-",
+                    "company": "Edwards and Sons",
+                    "current_location": [
+                      38.0684165,
+                      -88.24134
+                    ],
+                    "mail": "damien26@hotmail.com",
+                    "name": "Valerie Patel-Begum",
+                    "residence": "0 Bernard bypass\nPort Declan\nSN44 0FX",
+                    "sex": "F",
+                    "ssn": "ZZ 017204 T",
+                    "username": "yrobinson",
+                    "website": [
+                      "http://porter.net/",
+                      "http://www.fitzgerald.org/",
+                      "https://davis.com/",
+                      "https://www.hunter.com/"
+                    ]
+                  },
+                  {
+                    "address": "Flat 13\nBrookes haven\nPort Ronaldshire\nHP4E 9ES",
+                    "birthdate": "1977-07-24",
+                    "blood_group": "B+",
+                    "company": "Holland, Rogers and Cole",
+                    "current_location": [
+                      53.7110495,
+                      -11.64126
+                    ],
+                    "mail": "damiennewman@yahoo.com",
+                    "name": "Lynne Harrison",
+                    "residence": "Flat 70\nMiah ports\nGordonton\nB4 7EZ",
+                    "sex": "M",
+                    "ssn": "ZZ 228789 T",
+                    "username": "smithhazel",
+                    "website": [
+                      "https://george.biz/",
+                      "https://harris.com/"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/people/{username}": {
+      "summary": "Delete a person",
+      "parameters": [
+        {
+          "name": "username",
+          "in": "path",
+          "required": true,
+          "description": "Username of person to delete"
+        }
+      ],
+      "delete": {
+        "operationId": "deletePerson",
+        "responses": {
+          "204": {
+            "description": "Deleted person"
+          },
+          "404": {
+            "description": "Person not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/message"
+                },
+                "example": {
+                  "message": "Person with username='bibbity' could not be deleted because it does not exist"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "message": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "person": {
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "ssn": {
+            "type": "string"
+          },
+          "residence": {
+            "type": "string"
+          },
+          "blood_group": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sex": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "birthdate": {
+            "type": "string"
+          },
+          "current_location": {
+            "description": "coordinates: [latitude, longitude]",
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "website": {
+            "type": "array",
+            "items": {
+              "description": "website url",
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
