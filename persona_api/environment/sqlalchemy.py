@@ -18,12 +18,10 @@ DB_NAME = os.environ.get(ENV_NAME)
 
 if DB_SQLITE_PATH:
     DB_URI = 'sqlite:///' + DB_SQLITE_PATH
-elif DB_PROTOCOL and DB_HOST and DB_USERNAME and DB_PASSWORD and DB_NAME:
-    DB_PROTOCOL = quote_plus(DB_PROTOCOL)
-    DB_USERNAME = quote_plus(DB_USERNAME)
-    DB_PASSWORD = quote_plus(DB_PASSWORD)
-    DB_NAME = quote_plus(DB_NAME)
+else:
+    DB_PROTOCOL = quote_plus(DB_PROTOCOL) if DB_PROTOCOL else ''
+    DB_USERNAME = quote_plus(DB_USERNAME) if DB_USERNAME else ''
+    DB_PASSWORD = quote_plus(DB_PASSWORD) if DB_PASSWORD else ''
+    DB_NAME = quote_plus(DB_NAME) if DB_NAME else ''
 
     DB_URI = f'{DB_PROTOCOL}://{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}'
-else:
-    DB_URI = None
