@@ -5,16 +5,20 @@ from .utils import import_json
 from . import api
 
 
-def create_app():
+def create_app(import_name=__name__, settings_override=None):
     from .environment import SECRET_KEY, DB_URI
 
-    # create and configure the app
-    app = Flask(__name__)
-    app.config.from_mapping(SECRET_KEY=SECRET_KEY,
-                            SQLALCHEMY_DATABASE_URI=DB_URI,
-                            SQLALCHEMY_TRACK_MODIFICATIONS=False)
+    settings = dict(SECRET_KEY=SECRET_KEY,
+                    SQLALCHEMY_DATABASE_URI=DB_URI,
+                    SQLALCHEMY_TRACK_MODIFICATIONS=False)
+    if settings_override:
+        settings.update(**settings_override)
 
-    # start database session
+    # create and configure the app
+    app = Flask(import_name)
+    app.config.from_mapping(**settings)
+
+    # init app with database
     db.init_app(app)
 
     # register cli commands

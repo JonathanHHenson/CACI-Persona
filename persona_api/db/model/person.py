@@ -24,6 +24,7 @@ class Person(db.Model, SerializerMixin):
                                        cascade="all, delete-orphan")
     website = db.relationship('Website',
                               backref='person',
+                              uselist=True,
                               lazy="select",
                               cascade="all, delete-orphan")
 

@@ -1,5 +1,6 @@
 from . import db
 from .model import Person, Location, Website
+from sqlalchemy.orm import Session
 
 
 def import_person_from_json(person_item: dict):
@@ -17,11 +18,12 @@ def import_person_from_json(person_item: dict):
         return 'insert'
 
 
-def update_person(person: Person, person_item: dict):
+def update_person(person: Person, person_item: dict, session: Session = db.session):
     """Updates a person record
 
     :param person: The person record to update
     :param person_item: The data to update the person with
+    :param session: The current database session
     """
     person.company = person_item.get('company')
     person.ssn = person_item.get('ssn')
@@ -45,18 +47,18 @@ def update_person(person: Person, person_item: dict):
             latitude=current_location[0],
             longitude=current_location[1]
         )
-        db.session.add(location)
+        session.add(location)
     elif person.current_location:
         # If new current location is not specified, delete the current location record.
-        db.session.delete(current_location)
+        person.current_location = None
 
-    new_websites = set(person_item.get('website'))
+    new_websites = set(new_websites if (new_websites := person_item.get('website')) else [])
     old_websites = set()
     if person.website:
         # Remove old websites that aren't included in the new website list
         for old_website in person.website:
             if old_website.url not in new_websites:
-                db.session.delete(old_website)
+                session.delete(old_website)
             else:
                 # Updates the old_websites set with urls that are kept
                 old_websites.add(old_website.url)
@@ -68,16 +70,18 @@ def update_person(person: Person, person_item: dict):
                     username=person.username,
                     url=new_url
                 )
-                db.session.add(website)
+                session.add(website)
 
-    db.session.add(person)
-    db.session.commit()
+    session.add(person)
+    session.commit()
 
 
-def add_person(person_item: dict):
+def add_person(person_item: dict, session: Session = db.session):
     """Inserts a person record
 
     :param person_item: The data to construct the person record with
+    :param session: The current database session
+    :returns: The new person record
     """
     username = person_item['username']
     person = Person(
@@ -92,7 +96,7 @@ def add_person(person_item: dict):
         mail=person_item.get('mail'),
         birthdate=person_item.get('birthdate')
     )
-    db.session.add(person)
+    session.add(person)
 
     current_location = person_item.get('current_location')
     if current_location:
@@ -101,39 +105,49 @@ def add_person(person_item: dict):
             latitude=current_location[0],
             longitude=current_location[1]
         )
-        db.session.add(location)
+        session.add(location)
 
     if 'website' in person_item:
         for url in set(person_item['website']):
             website = Website(username=username, url=url)
-            db.session.add(website)
+            session.add(website)
 
-    db.session.commit()
+    session.commit()
+    return person
 
 
-def get_person(username: str):
+def get_person(username: str, session: Session = db.session):
     """Obtains the person record with the specified username
 
     :param username: The username of the person to obtain
+    :param session: The current database session
     :return: A Person record or None
     """
-    return Person.query.filter_by(username=username).one_or_none()
+    if not session:
+        session = db.session
+    return session.query(Person).filter_by(username=username).one_or_none()
 
 
-def get_people(top: int, skip: int):
+def get_people(top: int, skip: int, session: Session = db.session):
     """Returns a list of all person records (paginated)
 
     :param top: The number of records to return
     :param skip: The number of records to skip
+    :param session: The current database session
     :return: An iterable of Person records
     """
-    return Person.query.limit(top).offset(skip).all()
+    if not session:
+        session = db.session
+    return session.query(Person).limit(top).offset(skip).all()
 
 
-def delete_person(person: Person):
+def delete_person(person: Person, session: Session = None):
     """Deletes a person record
 
     :param person: The person record to delete
+    :param session: The current database session
     """
-    db.session.delete(person)
-    db.session.commit()
+    if not session:
+        session = db.session
+    session.delete(person)
+    session.commit()
