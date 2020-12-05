@@ -53,6 +53,11 @@ def db(app, request):
     return _db
 
 
+@pytest.fixture(scope="function")
+def client(app):
+    return app.test_client()
+
+
 @pytest.fixture(scope='function')
 def session(db, request):
     """Creates a new database session for a test."""
